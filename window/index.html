@@ -14,42 +14,16 @@
     <nav class="menu_bar">
         <ul class="menu_list">
             <li class="menu_item"><a href="../index.html">トップ</a></li>
-            <li class="menu_item"><a href="blog/index.html">技術ブログ</a></li>
-            <li class="menu_item"><a href="../portfolio.html">今までの作品</a> </li>
-            <li class="menu_item"><a href="../profile.html">プロフィール</a></li>
         </ul>
     </nav>
 
     <div class="box">
-        <h1>ウインドウの生成方法</h1>
-        <h2>DxLibとの違い</h2>
-        <h3>DxLibでは、DxLib_Init() でウインドウを生成できますが、Win32APIを直接実行する場合、1つの関数では生成することができません。</h3>
-
-        <h2>必要なもの</h2>
-        <h3>main関数 - int main() ではなく、DxLibと同じ WinMain</h3>
-        <h3>* ウインドウクラス　-　Windows側にウインドウとして認識するためのデータ</h3>
-        <h3>* ウインドウプロシージャ - Windows側が送ってくれる、ウインドウの情報を引数にした、関数。</h3>
-
-        <h2>メッセージとは？</h2>
-        <h3>Windows側が送る、ウインドウに何が起こったかを示すもの。ウインドウプロシージャが呼ばれることによって、switch文をたどって目的のメッセージとして処理されます。</h3>
-        <h3>* WM_CREATE ： ウインドウ作成時</h3>
-        <h3>* WM_DESTROY ：　ウインドウが閉じられたとき</h3>
-
-        <h2>分解したコード</h2>
-        <h3>ウインドウクラスの生成＆登録</h3>
-        <code>
-            //WNDCLASSEXWの参考：https://learn.microsoft.com/ja-jp/windows/win32/api/winuser/ns-winuser-wndclassexw<br>
-	        WNDCLASSEXW wndClass = {};<br>
-	        wndClass.cbSize = sizeof(WNDCLASSEXW); //構造体のサイズ<br>
-	        wndClass.hInstance = hInstance; //インスタンス<br>
-	        wndClass.lpszClassName = WINDOW_CLASS_NAME; //クラスの名前<br>
-	        wndClass.lpfnWndProc = WndProc; //ウインドウプロシージャ<br>
-	        wndClass.hIcon = LoadIcon(nullptr, IDI_APPLICATION); //アイコン（参考：https://learn.microsoft.com/ja-jp/windows/win32/menurc/about-icons）<br>
-	        wndClass.hIconSm = LoadIcon(nullptr, IDI_WINLOGO); //小さいアイコン<br>
-	        wndClass.hCursor = LoadCursor(nullptr, IDC_ARROW); //カーソル（参考：https://learn.microsoft.com/ja-jp/windows/win32/menurc/about-cursors）<br>
-	        wndClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH); //背景<br>
-	        RegisterClassEx(&wndClass); //ウインドウクラスを登録する関数<br>
-        </code>
+        <h1>このページはウインドウに関するページです。</h1>
     </div>
+
+    <div class="box">
+        <h1><a href="createWindow.html">ウインドウ生成方法</a></h1>
+    </div>
+
 </body>
 </html>

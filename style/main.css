@@ -85,6 +85,28 @@
     border-radius: 10px;
 }
 
+.box_title {
+    font-weight: bold;
+    font-family: sytem-ui;
+    font-size: 40px;
+}
+
+.box_dep {
+    font-family: sytem-ui;
+    font-size: 20px;
+    font-weight: 250;
+}
+
+.box a {
+    text-decoration: none;
+    font-family: sytem-ui;
+    font-size: 20px;
+}
+
+.box a:hover {
+    filter: brightness(50%);
+}
+
 .box .left_text {
     margin: 20px;
 }

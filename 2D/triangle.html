@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <link rel="stylesheet" href="../style/main.css">
+    <title>ホームページ</title>
+    <style>
+        body {
+            margin: 0px;
+            background-color: aliceblue;
+        }
+    </style>
+</head>
+<body>
+    <nav class="menu_bar">
+        <ul class="menu_list">
+            <li class="menu_item"><a href="../index.html">トップ</a></li>
+            <li class="menu_item"><a href="../window/index.html">ウインドウ</a></li>
+            <li class="menu_item"><a href="../2D/index.html">2D</a></li>
+            <li class="menu_item"><a href="../3D/index.html">3D</a></li>
+            <li class="menu_item"><a href="../Shader/index.html">シェーダー</a></li>
+        </ul>
+    </nav>
+
+    <div class="box">
+        <div class="box_title">三角形を描画する方法</div>
+        <div class="box_title">最終的なコード： <a href="https://github.com/programmer-2025/DirectX_Engine/blob/main/Engine/Triangle.cpp">Github</a></div>
+        <div class="box_dep">三角形には、頂点が3つ必要なので、頂点データを3つ用意します。</div>
+        <div class="box">
+            	vertices_[0] = { verticePos[0], color[0], {0, 0}}; // 左上 <br>
+	            vertices_[1] = { verticePos[1], color[1], {0, 1}}; // 左下 <br>
+	            vertices_[2] = { verticePos[2], color[2], {1, 0}}; // 右上 <br>
+        </div>
+        
+        <div class="box_dep">描画する上で、絶対必要な、頂点バッファ・コンスタントバッファを作ります。</div>
+        <div class="box" style="white-space: pre;">
+                HRESULT result = S_OK;
+
+	        D3D11_BUFFER_DESC bufferDesc = {};
+	        bufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	        bufferDesc.ByteWidth = sizeof(vertices_);
+	        bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	        bufferDesc.CPUAccessFlags = 0;
+	        bufferDesc.MiscFlags = 0;
+	        bufferDesc.StructureByteStride = 0;
+
+	        // 参考： https://learn.microsoft.com/ja-jp/windows/win32/api/d3d11/ns-d3d11-d3d11_buffer_desc
+	        D3D11_BUFFER_DESC constantBufferDesc = {};
+	        constantBufferDesc.ByteWidth = sizeof(ConstantBuffer);
+	        constantBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	        constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	        result = GetDevice()->CreateBuffer(&constantBufferDesc, nullptr, &constantBuffer_);
+
+	        D3D11_SUBRESOURCE_DATA verticeData = {};
+	        verticeData.pSysMem = vertices_;
+
+	        result = GetDevice()->CreateBuffer(&bufferDesc, &verticeData, &vertexBuffer_);
+        </div>
+
+        <div class="box_dep">これだけではコンスタントバッファに何も送られないので、更新する必要があります。</div>
+        <div class="box" style="white-space: pre;">
+	Camera* camera = CameraManager::getCurentCamera();
+	if (camera == nullptr) return;
+
+	XMMATRIX scaleMat = XMMatrixScaling(scale_.x, scale_.y, scale_.z);
+	XMMATRIX rotMat = XMMatrixRotationZ(rotation_.z) * XMMatrixRotationX(rotation_.x) * XMMatrixRotationY(rotation_.y);
+	XMMATRIX transMat = XMMatrixTranslation(postion_.x, postion_.y, postion_.z);
+	XMMATRIX world = scaleMat * rotMat * transMat;
+	XMMATRIX view = camera->getMatrix();
+	XMMATRIX projection = camera->GetProjection();
+
+	ConstantBuffer cb = {};
+	cb.wvpMat = XMMatrixTranspose(world * view * projection);
+	GetContext()->UpdateSubresource(constantBuffer_, 0, nullptr, &cb, 0, 0);
+        </div>
+
+        <div class="box_dep">最終的には描画する命令も書く必要があります。</div>
+        <div class="box" style="white-space: pre;">
+    UINT stride = sizeof(Vertex);
+	UINT offset = 0;
+	ID3D11ShaderResourceView* nullSRV = nullptr;
+	ChangeDrawWireFrameMode(false);
+	GetContext()->PSSetShaderResources(0, 1, &nullSRV);
+	GetContext()->IASetInputLayout(ShaderManager::inputLayout_);
+	GetContext()->IASetVertexBuffers(0, 1, &vertexBuffer_, &stride, &offset);
+	GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	GetContext()->VSSetShader(ShaderManager::vertexShader_, nullptr, 0);
+	GetContext()->PSSetShader(ShaderManager::pixelDebugShader_, nullptr, 0);
+	GetContext()->VSSetConstantBuffers(0, 1, &constantBuffer_);
+
+	GetContext()->Draw(3, 0);
+
+	GetContext()->RSSetState(nullptr);
+        </div>
+
+    </div>
+</body>

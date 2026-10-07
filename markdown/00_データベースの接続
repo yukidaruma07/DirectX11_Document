@@ -1,0 +1,28 @@
+# はじめに
+* データを保存するときには、ローカル上のファイルのほかに、データベースというものがあります。
+* 今回はデータベースの接続方法を紹介します。
+
+# コードの例
+```cpp
+    sql::Driver* driver = sql::mariadb::get_driver_instance();
+
+    sql::SQLString url("jdbc:mariadb://localhost:3306/データベース名");
+    sql::Properties properties({
+        {"user", "ユーザー名"},
+        {"password", "パスワード"}
+        });
+
+    sql::Connection* conn(driver->connect(url, properties));
+
+    std::cout << "接続されました" << std::endl;
+
+    sql::Statement* stmt = conn->createStatement();
+    sql::ResultSet* result = stmt->executeQuery("select * from テーブル名;");
+
+    while (result->next()) {
+        int id = result->getInt("id");
+        auto name = result->getString("name");
+        std::cout << "id" << id << "name" << name;
+    }
+    return 0;
+```

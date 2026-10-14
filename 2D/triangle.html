@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../style/main.css">
     <title>ホームページ</title>
     <style>
@@ -11,15 +13,16 @@
     </style>
 </head>
 <body>
-    <nav class="menu_bar">
-        <ul class="menu_list">
-            <li class="menu_item"><a href="../index.html">トップ</a></li>
-            <li class="menu_item"><a href="../window/index.html">ウインドウ</a></li>
-            <li class="menu_item"><a href="../2D/index.html">2D</a></li>
-            <li class="menu_item"><a href="../3D/index.html">3D</a></li>
-            <li class="menu_item"><a href="../Shader/index.html">シェーダー</a></li>
-        </ul>
-    </nav>
+	<nav class="menu_parent">
+		<div class="menu_item">DirectX11ドキュメント</div>
+		<ul>
+			<li><a href="../index.html">トップ</a></li>
+			<li><a href="../window/index.html">ウインドウ</a></li>
+			<li><a href="../2D/index.html">2D</a></li>
+			<li><a href="../3D/index.html">3D</a></li>
+			<li><a href="../Shader/index.html">シェーダー</a></li>
+		</ul>
+	</nav>
 
     <div class="box">
         <div class="box_title">三角形を描画する方法</div>
@@ -32,7 +35,7 @@
         </div>
         
         <div class="box_dep">描画する上で、絶対必要な、頂点バッファ・コンスタントバッファを作ります。</div>
-        <div class="box" style="white-space: pre;">
+        <div class="box code" style="white-space: pre;">
                 HRESULT result = S_OK;
 
 	        D3D11_BUFFER_DESC bufferDesc = {};
@@ -57,7 +60,7 @@
         </div>
 
         <div class="box_dep">これだけではコンスタントバッファに何も送られないので、更新する必要があります。</div>
-        <div class="box" style="white-space: pre;">
+        <div class="box code" style="white-space: pre;">
 	Camera* camera = CameraManager::getCurentCamera();
 	if (camera == nullptr) return;
 
@@ -74,7 +77,7 @@
         </div>
 
         <div class="box_dep">最終的には描画する命令も書く必要があります。</div>
-        <div class="box" style="white-space: pre;">
+        <div class="box code" style="white-space: pre;">
     UINT stride = sizeof(Vertex);
 	UINT offset = 0;
 	ID3D11ShaderResourceView* nullSRV = nullptr;

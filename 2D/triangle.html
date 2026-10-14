@@ -4,8 +4,57 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../style/main.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/styles/default.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/highlight.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/languages/cpp.min.js"></script>
+	<script>
+		hljs.highlightAll();
+
+		document.addEventListener("DOMContentLoaded", () => {
+			const params = new URLSearchParams(window.location.search);
+			const location = params.get('postion');
+			const locationClass = document.querySelector(".postion" + location);
+			const rect = locationClass.getBoundingClientRect();
+			scrollTo(0, rect.top);
+			console.log("スクロールしました。")
+		})
+
+	</script>
     <title>ホームページ</title>
-    <style></style>
+    <style>
+		pre {
+			white-space: pre-line;
+		}
+
+		code {
+			font-size: 120%;
+			font-weight: bold;
+		}
+
+		.boxTest_code {
+			background: #e1dbdb;
+			margin-top: 10px;
+			margin-bottom: 10px;
+		}
+
+		.tableContentsParent {
+			position: sticky;
+			top: 20px;
+			align-self: flex-start;
+
+			margin-left: auto;
+			margin-right: auto;
+			width: fit-content;
+			height: fit-content;
+			background: #bdcbdc;
+			border-radius: 10px;
+		}
+
+		.tableContentsParent .title {
+			font-weight: bold;
+		}
+
+	</style>
 </head>
 <body>
 	<nav class="menu_parent">
@@ -19,76 +68,120 @@
 		</ul>
 	</nav>
 
-    <div class="box">
-        <div class="box_title">三角形を描画する方法</div>
-        <div class="box_title">最終的なコード： <a href="https://github.com/programmer-2025/DirectX_Engine/blob/main/Engine/Triangle.cpp">Github</a></div>
-        <div class="box_dep">三角形には、頂点が3つ必要なので、頂点データを3つ用意します。</div>
-        <div class="box">
-            	vertices_[0] = { verticePos[0], color[0], {0, 0}}; // 左上 <br>
-	            vertices_[1] = { verticePos[1], color[1], {0, 1}}; // 左下 <br>
-	            vertices_[2] = { verticePos[2], color[2], {1, 0}}; // 右上 <br>
-        </div>
-        
-        <div class="box_dep">描画する上で、絶対必要な、頂点バッファ・コンスタントバッファを作ります。</div>
-        <div class="box code" style="white-space: pre;">
-                HRESULT result = S_OK;
+	<div style="margin-top: 50px; margin-bottom: 50px; margin-left: 50px; margin-right: 50px;">
+		<div style="font-weight: 500; font-size: 150%; color: #2a2a2c;">三角形を描画する方法</div>
+		<div style="display: flex;">
+			<div style="width: 75%; padding: 20px; border-radius: 10px; background: white; margin-right: 20px;">
+				<div class="postion1" style="border-bottom: #2a2a2c solid 2px; font-size: 150%; font-weight: bold;">はじめに</div>
+				<div style="margin-top: 5px; margin-left: 20px; margin-right: 20px;">
+					<div>三角形を描画する方法を解説します。</div>
+					<div style="font-weight: bold;">最終的なコード：<a href="https://github.com/programmer-2025/DirectX_Engine/blob/main/Engine/Triangle.cpp">Github</a></div>
+				</div>
 
-	        D3D11_BUFFER_DESC bufferDesc = {};
-	        bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	        bufferDesc.ByteWidth = sizeof(vertices_);
-	        bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	        bufferDesc.CPUAccessFlags = 0;
-	        bufferDesc.MiscFlags = 0;
-	        bufferDesc.StructureByteStride = 0;
+				<div class="postion2" style="border-bottom: #2a2a2c solid 2px; font-size: 150%; font-weight: bold;">解説</div>
+				<div style="margin-top: 5px; margin-left: 20px; margin-right: 20px;">
 
-	        // 参考： https://learn.microsoft.com/ja-jp/windows/win32/api/d3d11/ns-d3d11-d3d11_buffer_desc
-	        D3D11_BUFFER_DESC constantBufferDesc = {};
-	        constantBufferDesc.ByteWidth = sizeof(ConstantBuffer);
-	        constantBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	        constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	        result = GetDevice()->CreateBuffer(&constantBufferDesc, nullptr, &constantBuffer_);
+					<div style="font-size: 150%; font-weight: bold; color: #465468;">①頂点を作る</div>
+					<div style="margin-left: 20px; margin-right: 20px;">
+						<div>三角形には、頂点が3つ必要なので、頂点データを3つ用意します。</div>
+						<pre><code class="language-cpp">
+							vertices_[0] = { verticePos[0], color[0], {0, 0}}; // 左上<br>
+							vertices_[1] = { verticePos[1], color[1], {0, 1}}; // 左下<br>
+							vertices_[2] = { verticePos[2], color[2], {1, 0}}; // 右上<br>
+						</code></pre>
+					</div>
 
-	        D3D11_SUBRESOURCE_DATA verticeData = {};
-	        verticeData.pSysMem = vertices_;
+					<div style="font-size: 150%; font-weight: bold; color: #465468;">②必要なものを作る</div>
+					<div style="margin-left: 20px; margin-right: 20px;">
+						<div style="font-weight: normal;">描画する上で、絶対必要な、頂点バッファ・コンスタントバッファを作ります。</div>
+						<pre><code class="language-cpp">
+							HRESULT result = S_OK;<br>
 
-	        result = GetDevice()->CreateBuffer(&bufferDesc, &verticeData, &vertexBuffer_);
-        </div>
+							D3D11_BUFFER_DESC bufferDesc = {};<br>
+							bufferDesc.Usage = D3D11_USAGE_DEFAULT;<br>
+							bufferDesc.ByteWidth = sizeof(vertices_);<br>
+							bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;<br>
+							bufferDesc.CPUAccessFlags = 0;<br>
+							bufferDesc.MiscFlags = 0;<br>
+							bufferDesc.StructureByteStride = 0;<br>
 
-        <div class="box_dep">これだけではコンスタントバッファに何も送られないので、更新する必要があります。</div>
-        <div class="box code" style="white-space: pre;">
-	Camera* camera = CameraManager::getCurentCamera();
-	if (camera == nullptr) return;
+							// 参考： https://learn.microsoft.com/ja-jp/windows/win32/api/d3d11/ns-d3d11-d3d11_buffer_desc<br>
+							D3D11_BUFFER_DESC constantBufferDesc = {};<br>
+							constantBufferDesc.ByteWidth = sizeof(ConstantBuffer);<br>
+							constantBufferDesc.Usage = D3D11_USAGE_DEFAULT;<br>
+							constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;<br>
+							result = GetDevice()->CreateBuffer(&constantBufferDesc, nullptr, &constantBuffer_);<br>
 
-	XMMATRIX scaleMat = XMMatrixScaling(scale_.x, scale_.y, scale_.z);
-	XMMATRIX rotMat = XMMatrixRotationZ(rotation_.z) * XMMatrixRotationX(rotation_.x) * XMMatrixRotationY(rotation_.y);
-	XMMATRIX transMat = XMMatrixTranslation(postion_.x, postion_.y, postion_.z);
-	XMMATRIX world = scaleMat * rotMat * transMat;
-	XMMATRIX view = camera->getMatrix();
-	XMMATRIX projection = camera->GetProjection();
+							D3D11_SUBRESOURCE_DATA verticeData = {};<br>
+							verticeData.pSysMem = vertices_;<br>
 
-	ConstantBuffer cb = {};
-	cb.wvpMat = XMMatrixTranspose(world * view * projection);
-	GetContext()->UpdateSubresource(constantBuffer_, 0, nullptr, &cb, 0, 0);
-        </div>
+							result = GetDevice()->CreateBuffer(&bufferDesc, &verticeData, &vertexBuffer_);<br>
+						</code></pre>
+					</div>
 
-        <div class="box_dep">最終的には描画する命令も書く必要があります。</div>
-        <div class="box code" style="white-space: pre;">
-    UINT stride = sizeof(Vertex);
-	UINT offset = 0;
-	ID3D11ShaderResourceView* nullSRV = nullptr;
-	ChangeDrawWireFrameMode(false);
-	GetContext()->PSSetShaderResources(0, 1, &nullSRV);
-	GetContext()->IASetInputLayout(ShaderManager::inputLayout_);
-	GetContext()->IASetVertexBuffers(0, 1, &vertexBuffer_, &stride, &offset);
-	GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	GetContext()->VSSetShader(ShaderManager::vertexShader_, nullptr, 0);
-	GetContext()->PSSetShader(ShaderManager::pixelDebugShader_, nullptr, 0);
-	GetContext()->VSSetConstantBuffers(0, 1, &constantBuffer_);
+					<div style="font-size: 150%; font-weight: bold; color: #465468;">③更新する</div>
+					<div style="margin-left: 20px; margin-right: 20px;">
+						<div>これだけではコンスタントバッファに何も送られないので、更新する必要があります。</div>
+						<pre><code class="language-cpp">
+							Camera* camera = CameraManager::getCurentCamera();<br>
+							if (camera == nullptr) return;<br>
 
-	GetContext()->Draw(3, 0);
+							XMMATRIX scaleMat = XMMatrixScaling(scale_.x, scale_.y, scale_.z);<br>
+							XMMATRIX rotMat = XMMatrixRotationZ(rotation_.z) * XMMatrixRotationX(rotation_.x) * XMMatrixRotationY(rotation_.y);<br>
+							XMMATRIX transMat = XMMatrixTranslation(postion_.x, postion_.y, postion_.z);<br>
+							XMMATRIX world = scaleMat * rotMat * transMat;<br>
+							XMMATRIX view = camera->getMatrix();<br>
+							XMMATRIX projection = camera->GetProjection();<br>
 
-	GetContext()->RSSetState(nullptr);
-        </div>
+							ConstantBuffer cb = {};
+							cb.wvpMat = XMMatrixTranspose(world * view * projection);
+							GetContext()->UpdateSubresource(constantBuffer_, 0, nullptr, &cb, 0, 0);
+						</code></pre>
+					</div>
 
-    </div>
+					<div class="postion24" style="font-size: 150%; font-weight: bold; color: #465468;">④描画する</div>
+					<div style="margin-left: 20px; margin-right: 20px;">
+						<div>最終的には描画する命令も書く必要があります。</div>
+						<pre><code class="language-cpp">
+							UINT stride = sizeof(Vertex);<br>
+							UINT offset = 0;<br>
+							ID3D11ShaderResourceView* nullSRV = nullptr;<br>
+							ChangeDrawWireFrameMode(false);<br>
+							GetContext()->PSSetShaderResources(0, 1, &nullSRV);<br>
+							GetContext()->IASetInputLayout(ShaderManager::inputLayout_);<br>
+							GetContext()->IASetVertexBuffers(0, 1, &vertexBuffer_, &stride, &offset);<br>
+							GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);<br>
+							GetContext()->VSSetShader(ShaderManager::vertexShader_, nullptr, 0);<br>
+							GetContext()->PSSetShader(ShaderManager::pixelDebugShader_, nullptr, 0);<br>
+							GetContext()->VSSetConstantBuffers(0, 1, &constantBuffer_);<br>
+
+							GetContext()->Draw(3, 0);<br>
+
+							GetContext()->RSSetState(nullptr);<br>
+						</code></pre>
+					</div>
+				</div>
+
+			</div>
+			<div class="tableContentsParent">
+				<div style="font-weight: bold;">目次：</div>
+				<ul>
+					<li>
+						<a href="?postion=1">1：はじめに</a>
+					</li>
+					<li>
+						2：解説
+						<ul>
+							<li><a>２－１．頂点を作る</a></li>
+							<li><a>２－２．必要なものを作る</a></li>
+							<li><a>２－３．更新する</a></li>
+							<li><a href="?postion=24">２－４．描画する</a></li>
+						</ul>
+					</li>
+				</ul>
+
+			</div>
+		</div>
+	</div>
+
 </body>
